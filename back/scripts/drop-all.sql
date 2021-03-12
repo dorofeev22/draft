@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS draft;
+DROP USER IF EXISTS app_draft;

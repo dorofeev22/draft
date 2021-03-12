@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: draft
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${spring.application.name}?currentSchema=dr
+    username: app_draft
+    password: '0-App#drafT-9'
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  flyway:
+

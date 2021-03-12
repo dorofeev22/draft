@@ -1,0 +1,11 @@
+CREATE USER app_draft WITH ENCRYPTED PASSWORD '0-App#drafT-9';
+CREATE DATABASE draft
+WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
+\connect draft;
+CREATE EXTENSION "uuid-ossp";
+CREATE SCHEMA dr;
+GRANT CONNECT ON DATABASE draft TO app_draft;
+GRANT ALL PRIVILEGES ON SCHEMA dr TO app_draft;
