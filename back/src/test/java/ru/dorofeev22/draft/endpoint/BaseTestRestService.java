@@ -2,7 +2,9 @@ package ru.dorofeev22.draft.endpoint;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -13,8 +15,12 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.dorofeev22.draft.domain.BaseEntity;
+import ru.dorofeev22.draft.service.model.PageModel;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import static ru.dorofeev22.draft.core.utils.WebUtils.createPath;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -32,18 +38,30 @@ public abstract class BaseTestRestService<E extends BaseEntity, C, R> {
     protected abstract String getPath();
 
     protected R getItem(String id) throws Exception {
-        return mapResult(get(id, OK_STATUS));
+        return map(getById(id, OK_STATUS));
     }
 
-    protected MvcResult get(String id, ResultMatcher resultMatcher) throws Exception {
+    protected PageModel<R> getItemsPage(List<ImmutablePair<String, String>> parameters) throws Exception {
+        return toPageResponse(get(parameters, OK_STATUS));
+    }
+
+    protected MvcResult getById(String id, ResultMatcher resultMatcher) throws Exception {
+        return get(getPath().concat(SLASH).concat(id), resultMatcher);
+    }
+    
+    protected MvcResult get(List<ImmutablePair<String, String>> parameters, ResultMatcher resultMatcher) throws Exception {
+        return get(getPath().concat(createPath(parameters)), resultMatcher);
+    }
+    
+    protected MvcResult get(String url, ResultMatcher resultMatcher) throws Exception {
         return mockMvc
-                .perform(MockMvcRequestBuilders.get(getPath().concat(SLASH).concat(id)))
+                .perform(MockMvcRequestBuilders.get(url))
                 .andExpect(resultMatcher)
                 .andReturn();
     }
 
     protected R post(C creationModel) throws Exception {
-        return mapResult(post(createRequestBody(creationModel), OK_STATUS));
+        return map(post(createRequestBody(creationModel), OK_STATUS));
     }
 
 
@@ -58,9 +76,15 @@ public abstract class BaseTestRestService<E extends BaseEntity, C, R> {
                 .andReturn();
 
     }
-
-    private R mapResult(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
+    
+    private R map(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
         return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), getResponseClass());
+    }
+    
+    private PageModel<R> toPageResponse(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
+        return objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
+                objectMapper.getTypeFactory().constructParametricType(PageModel.class, getResponseClass()));
     }
 
     private String createRequestBody(C creationModel) throws JsonProcessingException {

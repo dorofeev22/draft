@@ -2,7 +2,7 @@ package ru.dorofeev22.draft.service.model;
 
 import javax.validation.constraints.Size;
 
-import static ru.dorofeev22.draft.core.ModelConstants.DEFAULT_STRING_LENGTH;
+import static ru.dorofeev22.draft.core.constant.ModelConstants.DEFAULT_STRING_LENGTH;
 
 public class UserCreationModel {
 

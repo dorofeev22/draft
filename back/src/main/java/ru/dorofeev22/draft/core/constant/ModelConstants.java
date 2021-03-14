@@ -1,4 +1,4 @@
-package ru.dorofeev22.draft.core;
+package ru.dorofeev22.draft.core.constant;
 
 public class ModelConstants {
 
