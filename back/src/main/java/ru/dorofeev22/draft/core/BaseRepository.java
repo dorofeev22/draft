@@ -1,8 +1,8 @@
-package ru.dorofeev22.draft.repository;
+package ru.dorofeev22.draft.core;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import ru.dorofeev22.draft.domain.BaseEntity;
+import ru.dorofeev22.draft.core.BaseEntity;
 
 import java.util.UUID;
 

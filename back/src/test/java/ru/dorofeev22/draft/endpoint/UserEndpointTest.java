@@ -7,13 +7,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.dorofeev22.draft.core.constant.UrlConstants;
+import ru.dorofeev22.draft.core.error.ErrorModel;
+import ru.dorofeev22.draft.core.error.ObjectNotFoundError;
 import ru.dorofeev22.draft.domain.User;
-import ru.dorofeev22.draft.service.model.PageModel;
+import ru.dorofeev22.draft.core.endpoint.PageModel;
 import ru.dorofeev22.draft.service.model.UserCreationModel;
 import ru.dorofeev22.draft.service.model.UserResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -44,6 +47,12 @@ public class UserEndpointTest extends BaseTestRestService<User, UserCreationMode
         assertNotNull(userResponse.getCreationMoment());
         assertNotNull(userResponse.getId());
         assertNull(userResponse.getPassword());
+    }
+    
+    @Test
+    public void userNotFoundTest() throws Exception {
+        ErrorModel errorModel = getByIdWithClientError(UUID.randomUUID().toString());
+        assertEquals(ObjectNotFoundError.class.getCanonicalName(), errorModel.getErrorCode());
     }
     
     @Test

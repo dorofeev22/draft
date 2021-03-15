@@ -1,9 +1,9 @@
-package ru.dorofeev22.draft.service.model;
+package ru.dorofeev22.draft.core.endpoint;
 
 import org.springframework.data.domain.Page;
-import ru.dorofeev22.draft.domain.BaseEntity;
+import ru.dorofeev22.draft.core.BaseEntity;
+import ru.dorofeev22.draft.core.endpoint.PageModel;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

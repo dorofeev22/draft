@@ -1,4 +1,4 @@
-package ru.dorofeev22.draft.domain;
+package ru.dorofeev22.draft.core;
 
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;

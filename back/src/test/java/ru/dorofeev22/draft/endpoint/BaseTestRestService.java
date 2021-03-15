@@ -2,7 +2,6 @@ package ru.dorofeev22.draft.endpoint;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +13,21 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.dorofeev22.draft.domain.BaseEntity;
-import ru.dorofeev22.draft.service.model.PageModel;
+import ru.dorofeev22.draft.core.BaseEntity;
+import ru.dorofeev22.draft.core.endpoint.PageModel;
+import ru.dorofeev22.draft.core.error.ErrorModel;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import static ru.dorofeev22.draft.core.utils.WebUtils.createPath;
+import static ru.dorofeev22.draft.core.utils.WebUtils.createPathParameters;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public abstract class BaseTestRestService<E extends BaseEntity, C, R> {
 
     private final static ResultMatcher OK_STATUS = MockMvcResultMatchers.status().isOk();
+    private final static ResultMatcher ERROR_4XX_STATUS = MockMvcResultMatchers.status().is4xxClientError();
     private final static String SLASH = "/";
 
     @Autowired
@@ -50,7 +51,11 @@ public abstract class BaseTestRestService<E extends BaseEntity, C, R> {
     }
     
     protected MvcResult get(List<ImmutablePair<String, String>> parameters, ResultMatcher resultMatcher) throws Exception {
-        return get(getPath().concat(createPath(parameters)), resultMatcher);
+        return get(getPath().concat(createPathParameters(parameters)), resultMatcher);
+    }
+    
+    protected ErrorModel getByIdWithClientError(String id) throws Exception {
+        return toErrorResponse(getById(id, ERROR_4XX_STATUS));
     }
     
     protected MvcResult get(String url, ResultMatcher resultMatcher) throws Exception {
@@ -79,6 +84,10 @@ public abstract class BaseTestRestService<E extends BaseEntity, C, R> {
     
     private R map(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
         return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), getResponseClass());
+    }
+    
+    private ErrorModel toErrorResponse(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorModel.class);
     }
     
     private PageModel<R> toPageResponse(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {

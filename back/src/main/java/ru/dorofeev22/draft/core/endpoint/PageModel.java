@@ -1,4 +1,4 @@
-package ru.dorofeev22.draft.service.model;
+package ru.dorofeev22.draft.core.endpoint;
 
 import java.util.List;
 

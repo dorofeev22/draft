@@ -13,7 +13,7 @@ public class WebUtils {
     private final static String EQUAL = "=";
     private final static String AMPERSAND = "&";
     
-    public static String createPath(List<ImmutablePair<String, String>> parameters) {
+    public static String createPathParameters(List<ImmutablePair<String, String>> parameters) {
         return QUESTION.concat(
                 parameters.stream()
                         .map(p -> p.left.concat(EQUAL).concat(p.right))

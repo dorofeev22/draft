@@ -1,4 +1,4 @@
-package ru.dorofeev22.draft.service;
+package ru.dorofeev22.draft.core;
 
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
@@ -12,10 +12,9 @@ import ru.dorofeev22.draft.core.searching.SearchCriteria;
 import ru.dorofeev22.draft.core.searching.SearchOperation;
 import ru.dorofeev22.draft.core.searching.SearchSpecification;
 import ru.dorofeev22.draft.core.utils.DateTimeUtils;
-import ru.dorofeev22.draft.core.utils.WebUtils;
-import ru.dorofeev22.draft.domain.BaseEntity;
-import ru.dorofeev22.draft.repository.BaseRepository;
-import ru.dorofeev22.draft.service.model.PageModel;
+import ru.dorofeev22.draft.core.BaseEntity;
+import ru.dorofeev22.draft.core.BaseRepository;
+import ru.dorofeev22.draft.core.endpoint.PageModel;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +27,7 @@ import static ru.dorofeev22.draft.core.error.ErrorHelper.createNotFountError;
 import static ru.dorofeev22.draft.core.searching.SearchOperation.IN;
 import static ru.dorofeev22.draft.core.searching.SearchOperation.LIKE;
 import static ru.dorofeev22.draft.core.utils.WebUtils.getIntParameterValue;
-import static ru.dorofeev22.draft.service.model.PageModelHelper.createPageModel;
+import static ru.dorofeev22.draft.core.endpoint.PageModelHelper.createPageModel;
 
 /**
  * Base service with common methods for Entities
@@ -115,7 +114,7 @@ public abstract class EntityBaseService<E extends BaseEntity, I, O> {
         return toObjectList(ids, UUID::fromString);
     }
     
-    protected List<Object> createLocalDateTimes(String[] dateTimes) {
+    public List<Object> createLocalDateTimes(String[] dateTimes) {
         return toObjectList(dateTimes, DateTimeUtils::fromIso);
     }
     

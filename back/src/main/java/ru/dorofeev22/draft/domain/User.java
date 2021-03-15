@@ -1,5 +1,7 @@
 package ru.dorofeev22.draft.domain;
 
+import ru.dorofeev22.draft.core.BaseEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
