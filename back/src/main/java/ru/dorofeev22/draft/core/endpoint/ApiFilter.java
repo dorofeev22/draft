@@ -13,6 +13,12 @@ public class ApiFilter implements Filter {
     
     private final Logger log = LoggerFactory.getLogger(getClass());
     
+    private final ApiCallLoggingHelper apiCallLoggingHelper;
+    
+    public ApiFilter(ApiCallLoggingHelper apiCallLoggingHelper) {
+        this.apiCallLoggingHelper = apiCallLoggingHelper;
+    }
+    
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -21,9 +27,8 @@ public class ApiFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         MultiReadHttpServletRequest multiReadRequest = new MultiReadHttpServletRequest((HttpServletRequest) request);
-        log.info(ApiCallLoggingHelper.createRequestInfo(multiReadRequest));
+        log.info(apiCallLoggingHelper.createRequestInfo(multiReadRequest));
         chain.doFilter(multiReadRequest, response);
-    
     }
     
     @Override
