@@ -6,45 +6,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.dorofeev22.draft.core.BaseEntity;
-import ru.dorofeev22.draft.core.endpoint.PageModel;
 import ru.dorofeev22.draft.core.error.ErrorModel;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static ru.dorofeev22.draft.core.utils.WebUtils.createPathParameters;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public abstract class BaseTestRestService<E extends BaseEntity, C, R> {
+public abstract class BaseTestRestService {
 
-    private final static ResultMatcher OK_STATUS = MockMvcResultMatchers.status().isOk();
+    protected final static ResultMatcher OK_STATUS = MockMvcResultMatchers.status().isOk();
     private final static ResultMatcher ERROR_4XX_STATUS = MockMvcResultMatchers.status().is4xxClientError();
+    private final static HttpHeaders mandatoryHeaders = new HttpHeaders() {{
+        add(HttpHeaders.USER_AGENT, "Application test");
+    }};
+
     private final static String SLASH = "/";
 
     @Autowired
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
 
-    protected abstract Class<R> getResponseClass();
     protected abstract String getPath();
-
-    protected R getItem(String id) throws Exception {
-        return map(getById(id, OK_STATUS));
-    }
-
-    protected PageModel<R> getItemsPage(List<ImmutablePair<String, String>> parameters) throws Exception {
-        return toPageResponse(get(parameters, OK_STATUS));
-    }
 
     protected MvcResult getById(String id, ResultMatcher resultMatcher) throws Exception {
         return get(getPath().concat(SLASH).concat(id), resultMatcher);
@@ -60,44 +56,40 @@ public abstract class BaseTestRestService<E extends BaseEntity, C, R> {
     
     protected MvcResult get(String url, ResultMatcher resultMatcher) throws Exception {
         return mockMvc
-                .perform(MockMvcRequestBuilders.get(url))
+                .perform(MockMvcRequestBuilders.get(url).headers(mandatoryHeaders))
                 .andExpect(resultMatcher)
                 .andReturn();
     }
-
-    protected R post(C creationModel) throws Exception {
-        return map(post(createRequestBody(creationModel), OK_STATUS));
-    }
-
 
     protected MvcResult post(String requestBody, ResultMatcher resultMatcher) throws Exception {
         return mockMvc
                 .perform(
                         MockMvcRequestBuilders
                                 .post(getPath())
+                                .headers(mandatoryHeaders)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
                 .andExpect(resultMatcher)
                 .andReturn();
 
     }
-    
-    private R map(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
-        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), getResponseClass());
+
+    protected MvcResult post(String extraPath, MockMultipartFile file) throws Exception {
+        return post(extraPath, file, OK_STATUS);
+    }
+
+    protected MvcResult post(String extraPath, MockMultipartFile file, ResultMatcher resultMatcher) throws Exception {
+        return mockMvc
+                .perform(
+                        multipart(getPath().concat(extraPath))
+                                .file(file)
+                                .headers(mandatoryHeaders))
+                .andExpect(resultMatcher)
+                .andReturn();
     }
     
     private ErrorModel toErrorResponse(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
         return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorModel.class);
     }
     
-    private PageModel<R> toPageResponse(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
-        return objectMapper.readValue(
-                mvcResult.getResponse().getContentAsString(),
-                objectMapper.getTypeFactory().constructParametricType(PageModel.class, getResponseClass()));
-    }
-
-    private String createRequestBody(C creationModel) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(creationModel);
-    }
-
 }
