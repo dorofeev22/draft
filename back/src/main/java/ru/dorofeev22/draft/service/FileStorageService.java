@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.dorofeev22.draft.core.error.InternalServerError;
 import ru.dorofeev22.draft.core.utils.DateTimeUtils;
 
 import javax.annotation.PostConstruct;
@@ -29,7 +30,7 @@ public class FileStorageService {
             Files.createDirectories(path);
         } catch (IOException e) {
             log.error("Couldn't create file storage: ", e);
-            throw new RuntimeException();
+            throw new InternalServerError();
         }
     }
 
@@ -37,8 +38,9 @@ public class FileStorageService {
         try {
             Files.copy(file.getInputStream(), path.resolve(createFileName(file)));
         } catch (Exception e) {
-            log.error("Couldn't save file: ", e);
-            throw new RuntimeException();
+            final InternalServerError internalServerError = new InternalServerError();
+            log.error("Couldn't save file. Number of error: {}, reason: ", internalServerError.getErrorId(), e);
+            throw internalServerError;
         }
     }
 

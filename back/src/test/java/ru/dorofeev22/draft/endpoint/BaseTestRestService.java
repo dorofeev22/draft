@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.dorofeev22.draft.core.error.ErrorModel;
+import ru.dorofeev22.draft.core.error.service.ErrorModel;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -54,6 +54,10 @@ public abstract class BaseTestRestService {
         return toErrorResponse(getById(id, ERROR_4XX_STATUS));
     }
     
+    protected ErrorModel getWithClientError(List<ImmutablePair<String, String>> parameters) throws Exception {
+        return toErrorResponse(get(parameters, ERROR_4XX_STATUS));
+    }
+
     protected MvcResult get(String url, ResultMatcher resultMatcher) throws Exception {
         return mockMvc
                 .perform(MockMvcRequestBuilders.get(url).headers(mandatoryHeaders))

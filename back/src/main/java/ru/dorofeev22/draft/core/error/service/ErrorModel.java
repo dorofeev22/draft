@@ -1,4 +1,4 @@
-package ru.dorofeev22.draft.core.error;
+package ru.dorofeev22.draft.core.error.service;
 
 public class ErrorModel {
     

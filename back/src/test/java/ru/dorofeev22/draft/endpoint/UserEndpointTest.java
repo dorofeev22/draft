@@ -1,26 +1,25 @@
 package ru.dorofeev22.draft.endpoint;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.dorofeev22.draft.core.constant.UrlConstants;
 import ru.dorofeev22.draft.core.endpoint.PageModel;
-import ru.dorofeev22.draft.core.error.ErrorModel;
-import ru.dorofeev22.draft.core.error.ObjectNotFoundError;
+import ru.dorofeev22.draft.core.error.service.ErrorModel;
 import ru.dorofeev22.draft.domain.User;
 import ru.dorofeev22.draft.service.model.UserCreationModel;
 import ru.dorofeev22.draft.service.model.UserResponse;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.ISOLATED;
+import static ru.dorofeev22.draft.endpoint.UserTestHelper.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -37,10 +36,11 @@ public class UserEndpointTest extends BaseTestEntityRestService<User, UserCreati
     }
 
     @Test
+    @Sql(scripts = {"/delete-all-users.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(transactionMode = ISOLATED))
     public void createUserTest() throws Exception {
         String name = "Mr. Jackson";
         String login = "jhon1986";
-        UserResponse userResponse = post(createUserCreationModel(name, login));
+        UserResponse userResponse = post(UserTestHelper.createUserCreationModel(name, login));
         assertEquals(name, userResponse.getName());
         assertEquals(login, userResponse.getLogin());
         assertNotNull(userResponse.getCreationMoment());
@@ -51,7 +51,7 @@ public class UserEndpointTest extends BaseTestEntityRestService<User, UserCreati
     @Test
     public void userNotFoundTest() throws Exception {
         ErrorModel errorModel = getByIdWithClientError(UUID.randomUUID().toString());
-        assertEquals(ObjectNotFoundError.class.getCanonicalName(), errorModel.getErrorCode());
+        assertEquals("ObjectNotFoundError", errorModel.getErrorCode());
     }
     
     @Test
@@ -69,33 +69,10 @@ public class UserEndpointTest extends BaseTestEntityRestService<User, UserCreati
         assertEquals(2 , result.getItems().size());
     }
 
-    private UserCreationModel createUserCreationModel(String name, String login) {
-        UserCreationModel userCreationModel = new UserCreationModel();
-        userCreationModel.setName(name);
-        userCreationModel.setLogin(login);
-        userCreationModel.setPassword("1_ghyjk^9");
-        return userCreationModel;
-    }
-    
-    private List<ImmutablePair<String, String>> createLikeSearchParameters() {
-        return new ArrayList<ImmutablePair<String, String>>() {{
-            add(new ImmutablePair<>("name", "r"));
-            add(new ImmutablePair<>("login", "ey"));
-        }};
-    }
-
-    private List<ImmutablePair<String, String>> createInSearchParameters() {
-        return new ArrayList<ImmutablePair<String, String>>() {{
-            add(new ImmutablePair<>("id", "087053ae-c31f-4842-baba-9ebafe3ee594"));
-            add(new ImmutablePair<>("id", "087053ae-c31f-4842-baba-9ebafe3ee59b"));
-        }};
-    }
-
-    private List<ImmutablePair<String, String>> createDateSearchParameters() {
-        return new ArrayList<ImmutablePair<String, String>>() {{
-            add(new ImmutablePair<>("creationMoment", "2021-03-13T01:00:00.000"));
-            add(new ImmutablePair<>("creationMoment", "2021-03-14T22:00:00.000"));
-        }};
+    @Test
+    public void getUsersParamErrorTest() throws Exception {
+        ErrorModel errorModel = getWithClientError(createPageParameters(5, 11));
+        assertEquals("BadParameterError", errorModel.getErrorCode());
     }
 
 }

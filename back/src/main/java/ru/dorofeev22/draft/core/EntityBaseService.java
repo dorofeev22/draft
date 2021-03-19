@@ -7,14 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import ru.dorofeev22.draft.core.constant.RequestConstants;
+import ru.dorofeev22.draft.core.endpoint.PageModel;
 import ru.dorofeev22.draft.core.searching.PageableCreator;
 import ru.dorofeev22.draft.core.searching.SearchCriteria;
 import ru.dorofeev22.draft.core.searching.SearchOperation;
 import ru.dorofeev22.draft.core.searching.SearchSpecification;
 import ru.dorofeev22.draft.core.utils.DateTimeUtils;
-import ru.dorofeev22.draft.core.BaseEntity;
-import ru.dorofeev22.draft.core.BaseRepository;
-import ru.dorofeev22.draft.core.endpoint.PageModel;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +21,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ru.dorofeev22.draft.core.constant.RequestConstants.pageableParameters;
-import static ru.dorofeev22.draft.core.error.ErrorHelper.createNotFountError;
+import static ru.dorofeev22.draft.core.endpoint.PageModelHelper.createPageModel;
+import static ru.dorofeev22.draft.core.error.service.ErrorHelper.createNotFountError;
 import static ru.dorofeev22.draft.core.searching.SearchOperation.IN;
 import static ru.dorofeev22.draft.core.searching.SearchOperation.LIKE;
 import static ru.dorofeev22.draft.core.utils.WebUtils.getIntParameterValue;
-import static ru.dorofeev22.draft.core.endpoint.PageModelHelper.createPageModel;
 
 /**
  * Base service with common methods for Entities

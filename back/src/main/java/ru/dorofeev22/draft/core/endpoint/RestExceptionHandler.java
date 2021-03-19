@@ -5,22 +5,32 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.dorofeev22.draft.core.error.BaseError;
-import ru.dorofeev22.draft.core.error.ErrorModel;
-import ru.dorofeev22.draft.core.error.ObjectNotFoundError;
+import ru.dorofeev22.draft.core.error.service.ErrorModel;
+import ru.dorofeev22.draft.core.error.service.MessageHelper;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
-    
+
+    private final MessageHelper messageHelper;
+
+    public RestExceptionHandler(MessageHelper messageHelper) {
+        this.messageHelper = messageHelper;
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BaseError.class)
     public ErrorModel handleRuntime(BaseError e) {
-        return new ErrorModel(e.getClass().getCanonicalName(), e.getLocalizedMessage());
+        return createErrorModel(e);
     }
     
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
     public ErrorModel handleRuntime(Throwable t) {
-        return new ErrorModel(t.getClass().getCanonicalName(), t.getLocalizedMessage());
+        return createErrorModel(t);
+    }
+
+    private ErrorModel createErrorModel(Throwable t) {
+        return new ErrorModel(t.getClass().getSimpleName(), messageHelper.localize(t));
     }
 
 }
