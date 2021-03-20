@@ -18,6 +18,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.ISOLATED;
 import static ru.dorofeev22.draft.endpoint.UserTestHelper.*;
 
@@ -36,7 +37,7 @@ public class UserEndpointTest extends BaseTestEntityRestService<User, UserCreati
     }
 
     @Test
-    @Sql(scripts = {"/delete-all-users.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, config = @SqlConfig(transactionMode = ISOLATED))
+    @Sql(scripts = {"/delete-all-users.sql"}, executionPhase = AFTER_TEST_METHOD, config = @SqlConfig(transactionMode = ISOLATED))
     public void createUserTest() throws Exception {
         String name = "Mr. Jackson";
         String login = "jhon1986";

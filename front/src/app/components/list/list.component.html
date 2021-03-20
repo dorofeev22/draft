@@ -1,0 +1,11 @@
+<p-panel [header]="header">
+  <app-table
+    [items]="items"
+    [columns]="columns"
+    [rows]="rows"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    (loadItems)="load($event)"
+  ></app-table>
+</p-panel>
+<app-dialog [dialog]="dialog"></app-dialog>

@@ -1,0 +1,6 @@
+<p-dialog [header]="dialog.title" [(visible)]="dialog.display" [closable]="true" modal="true">
+    {{dialog.message}}
+    <p-footer>
+        <p-button (onClick)="dialog.display = false">Ok</p-button>
+    </p-footer>
+</p-dialog>
