@@ -57,12 +57,14 @@ public class UserEndpointTest extends BaseTestRestService<User, UserCreationMode
     
     @Test
     @Sql("/insert-user.sql")
+    @Sql(scripts = {"/clean-users.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getUserTest() throws Exception {
         assertNotNull(getItem("087053ae-c31f-4842-baba-9ebafe3ee594"));
     }
 
     @Test
     @Sql("/insert-users.sql")
+    @Sql(scripts = {"/clean-users.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getUsersTest() throws Exception {
         PageModel<UserResponse> result  = getItemsPage(createLikeSearchParameters());
         PageModel<UserResponse> results  = getItemsPage(createInSearchParameters());
