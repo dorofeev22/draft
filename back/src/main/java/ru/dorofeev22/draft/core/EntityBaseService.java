@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import ru.dorofeev22.draft.core.constant.RequestConstants;
 import ru.dorofeev22.draft.core.endpoint.PageModel;
+import ru.dorofeev22.draft.core.error.DuplicateObjectError;
 import ru.dorofeev22.draft.core.searching.PageableCreator;
 import ru.dorofeev22.draft.core.searching.SearchCriteria;
 import ru.dorofeev22.draft.core.searching.SearchOperation;
@@ -16,6 +17,7 @@ import ru.dorofeev22.draft.core.utils.DateTimeUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotEmpty;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -26,6 +28,7 @@ import static ru.dorofeev22.draft.core.error.service.ErrorHelper.createNotFountE
 import static ru.dorofeev22.draft.core.searching.SearchOperation.IN;
 import static ru.dorofeev22.draft.core.searching.SearchOperation.LIKE;
 import static ru.dorofeev22.draft.core.utils.WebUtils.getIntParameterValue;
+import static ru.dorofeev22.draft.core.utils.WebUtils.getParameterValues;
 
 /**
  * Base service with common methods for Entities
@@ -52,6 +55,10 @@ public abstract class EntityBaseService<E extends BaseEntity, I, O> {
     protected abstract Class<E> getEntityClass();
     protected abstract Class<O> getOutcomeModelClass();
     
+    protected void beforeCreation(@NotNull final I incomeModel) {
+        // implement in the heirs if it needed
+    }
+    
     protected O toOutcome(@NotNull final E entity) {
         return modelMapper.map(entity, getOutcomeModelClass());
     }
@@ -60,8 +67,9 @@ public abstract class EntityBaseService<E extends BaseEntity, I, O> {
         return getRepository().findById(id).orElseThrow(() -> createNotFountError(getEntityClass(), id));
     }
     
-    public E create(I creationModel) {
-        return getRepository().save(modelMapper.map(creationModel, getEntityClass()));
+    public E create(I incomeModel) {
+        beforeCreation(incomeModel);
+        return getRepository().save(modelMapper.map(incomeModel, getEntityClass()));
     }
 
     public O createAndGetOutcome(@NotNull final I creationModel) {
@@ -78,6 +86,24 @@ public abstract class EntityBaseService<E extends BaseEntity, I, O> {
     
     public Page<E> search(@NotNull final Map<String, String[]> parameters) {
         return getRepository().findAll(createSpecification(parameters), createPageable(parameters));
+    }
+    
+    /**
+     * Find entities by criteria
+     * @param parameters criteria (not empty to restrict return collection)
+     * @return list of entities
+     */
+    protected List<E> find(@NotNull @NotEmpty final Map<String, String[]> parameters) {
+        return getRepository().findAll(createSpecification(parameters));
+    }
+    
+    /**
+     * Find entities and throw DuplicateObjectError if find
+     * @param parameters criteria
+     */
+    protected void findAndThrow(@NotNull final Map<String, String[]> parameters) {
+        if (!find(parameters).isEmpty())
+            throw new DuplicateObjectError(getEntityClass().getName(), getParameterValues(parameters));
     }
     
     public PageModel<O> searchOutcomes(@NotNull final HttpServletRequest httpServletRequest) {

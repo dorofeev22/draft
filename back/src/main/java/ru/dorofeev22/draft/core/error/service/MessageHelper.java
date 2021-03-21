@@ -23,7 +23,7 @@ public class MessageHelper {
     }
 
     private String localize(@NotNull final Throwable t, final String... args) {
-        final Object[] localizedArgs = Arrays.stream(args).map(this::localize).toArray(Object[]::new);
+        final Object[] localizedArgs = args != null ? Arrays.stream(args).map(this::localize).toArray(Object[]::new) : null;
         return messageSource.getMessage(getClassName(t), localizedArgs, locale);
     }
 
