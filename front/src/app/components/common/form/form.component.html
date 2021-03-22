@@ -1,0 +1,20 @@
+<div class="p-grid forms-grid">
+  <div class="p-col-12 p-md-9">
+    <form *ngIf="!loading" [formGroup]="formGroup" (ngSubmit)="onSubmit()" aria-disabled="true" autocomplete="off">
+      <fieldset [disabled]="submitting">
+        <div class="ui-fluid" *ngFor="let f of fields" [ngSwitch]="f.type">
+          <div class="p-field p-grid">
+            <label [htmlFor]="f.id" class="p-col-12 p-md-3">{{f.label}}</label>
+            <div class="p-col-12 p-md-9">
+              <input [id]="f.id" [formControlName]="f.formControlName" [placeholder]="f.required ? 'Required' : ''" pInputText>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div>
+        <app-button label="Save" [type]="ButtonType.submit" [disabled]="!formGroup.valid || submitting"></app-button>
+        <app-button label="Cancel" [disabled]="submitting" (buttonClick)="onCancel()"></app-button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<p-panel [header]="header">
+  <app-form
+    [loading]="loading"
+    [formGroup]="form"
+    [fields]="fields"
+    [submitting]="submitting"
+    (submitForm)="save()"
+    (cancel)="navigateToList()"
+  ></app-form>
+</p-panel>
+<app-dialog [dialog]="dialog"></app-dialog>

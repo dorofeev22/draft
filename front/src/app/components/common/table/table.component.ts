@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Column} from '../../models/column';
+import {Column} from '../../../models/column';
 import {LazyLoadEvent} from 'primeng/api';
 
 @Component({

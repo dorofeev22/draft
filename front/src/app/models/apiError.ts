@@ -1,5 +1,6 @@
 export class ApiError {
   status: number;
+  statusText: string;
   error: ErrorResponse;
   message: string;
 }

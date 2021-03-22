@@ -13,11 +13,14 @@ export abstract class ListComponent extends BaseComponent {
   public columns: Column[];
   public rows: number;
   public totalRecords: number;
+  public createNewItemLabel: string;
 
-  protected constructor(restClientService: RestClientService) {
-    super(restClientService);
+  protected constructor(restClientService: RestClientService, itemRoute: string) {
+    super(restClientService, itemRoute);
     this.rows = 10;
     this.items = [];
+    this.createNewItemLabel = 'Create';
+    this.header = `${this.itemRoute} list`;
   }
 
   public load(event: LazyLoadEvent): void {
@@ -26,7 +29,9 @@ export abstract class ListComponent extends BaseComponent {
 
   protected find(params: SearchParams): void {
     this.sub.add(
-      this.processRequest<Page<any>>(this.restClientService.get<Page<any>>(this.path, params), this.loadItems.bind(this))
+      this.processRequest<Page<any>>(
+        this.restClientService.get<Page<any>>(this.apiPath, params), this.loadItems.bind(this), this.loadItemsCallback.bind(this)
+      )
     );
   }
 
@@ -37,6 +42,10 @@ export abstract class ListComponent extends BaseComponent {
   private loadItems(page: Page<any>): void {
     this.totalRecords = page.totalElements;
     this.items = page.items;
+  }
+
+  private loadItemsCallback(): void {
+    this.loading = false;
   }
 
 }

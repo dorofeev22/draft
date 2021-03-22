@@ -1,4 +1,4 @@
-<p-panel [header]="header">
+<p-panel [header]="header" styleClass="capitalize">
   <app-table
     [items]="items"
     [columns]="columns"
@@ -7,5 +7,8 @@
     [loading]="loading"
     (loadItems)="load($event)"
   ></app-table>
+  <p-footer>
+    <app-link [label]="createNewItemLabel" [route]="itemRoute"></app-link>
+  </p-footer>
 </p-panel>
 <app-dialog [dialog]="dialog"></app-dialog>
