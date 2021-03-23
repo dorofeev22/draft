@@ -31,4 +31,8 @@ export class RestClientService {
     return isEmpty(itemId) ? this.httpClient.post<T>(url, body) : this.httpClient.put<T>(url, body);
   }
 
+  public delete<T>(path: string, itemId: string): Observable<T> {
+    return this.httpClient.delete<T>(this.getUrl(path, itemId));
+  }
+
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 import ru.dorofeev22.draft.core.constant.RequestConstants;
 import ru.dorofeev22.draft.core.endpoint.PageModel;
 import ru.dorofeev22.draft.core.error.DuplicateObjectError;
@@ -108,6 +109,11 @@ public abstract class EntityBaseService<E extends BaseEntity, I, O> {
     
     public PageModel<O> searchOutcomes(@NotNull final HttpServletRequest httpServletRequest) {
         return createPageModel(search(httpServletRequest.getParameterMap()), this::toOutcome);
+    }
+    
+    @Transactional
+    public void delete(@NotNull final UUID id) {
+        getRepository().delete(getOrThrow(id));
     }
     
     private Specification<E> createSpecification(@NotNull final Map<String, String[]> parameters) {

@@ -1,9 +1,25 @@
 <p-table #pt [value]="items" [rows]="rows" [totalRecords]="totalRecords" [loading]="loading"
-         [lazy]="true" (onLazyLoad)="loadData($event)" [paginator]="true">
+         [lazy]="true" (onLazyLoad)="onLoadData($event)" [paginator]="true">
     <ng-template pTemplate="header">
         <tr><th *ngFor="let c of columns">{{c.header}}</th></tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
-        <tr><td *ngFor="let c of columns">{{item[c.field]}}</td></tr>
+        <tr>
+            <td *ngFor="let c of columns" [ngSwitch]="c.type">
+                <span *ngSwitchCase="ColumnType.data">{{item[c.field]}}</span>
+                <div *ngSwitchCase="ColumnType.action">
+                    <div *ngFor="let a of c.actions" [ngSwitch]="a.actionType">
+                        <app-link *ngSwitchCase="ActionType.edit" [route]="a.route" [param]="item.id" label="Edit"></app-link>
+                        <app-button
+                          *ngSwitchCase="ActionType.delete"
+                          label="Delete"
+                          (buttonClick)="onDeleteRow(item.id)"
+                          [disabled]="rowDeleting"
+                        ></app-button>
+                        <span *ngSwitchDefault>not implemented</span>
+                    </div>
+                </div>
+            </td>
+        </tr>
     </ng-template>
 </p-table>

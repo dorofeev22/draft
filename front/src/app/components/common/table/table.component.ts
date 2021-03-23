@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Column} from '../../../models/column';
+import {ActionColumn, ActionType, ColumnType, DataColumn} from '../../../models/column';
 import {LazyLoadEvent} from 'primeng/api';
 
 @Component({
@@ -9,20 +9,28 @@ import {LazyLoadEvent} from 'primeng/api';
 export class TableComponent implements OnInit {
 
   @Input() items: any[];
-  @Input() columns: Column[];
+  @Input() columns: (DataColumn | ActionColumn) [];
   @Input() rows: number;
   @Input() totalRecords: number;
   @Input() loading: boolean;
+  @Input() rowDeleting: boolean;
+  ColumnType = ColumnType;
+  ActionType = ActionType;
 
   constructor() { }
 
-  @Output() loadItems = new EventEmitter();
+  @Output() loadData = new EventEmitter();
+  @Output() deleteRow = new EventEmitter<string>();
 
   ngOnInit(): void {
   }
 
-  loadData(event: LazyLoadEvent): void {
-    this.loadItems.emit(event);
+  onLoadData(event: LazyLoadEvent): void {
+    this.loadData.emit(event);
+  }
+
+  onDeleteRow(id: string): void {
+    this.deleteRow.emit(id);
   }
 
 }

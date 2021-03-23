@@ -3,8 +3,8 @@ package ru.dorofeev22.draft.endpoint;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.dorofeev22.draft.core.constant.UrlConstants;
-import ru.dorofeev22.draft.service.UserService;
 import ru.dorofeev22.draft.core.endpoint.PageModel;
+import ru.dorofeev22.draft.service.UserService;
 import ru.dorofeev22.draft.service.model.UserCreationModel;
 import ru.dorofeev22.draft.service.model.UserResponse;
 
@@ -36,5 +36,9 @@ public class UserEndpoint {
         return userService.searchOutcomes(httpServletRequest);
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable UUID id) {
+        userService.delete(id);
+    }
 
 }

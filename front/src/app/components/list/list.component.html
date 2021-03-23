@@ -5,7 +5,9 @@
     [rows]="rows"
     [totalRecords]="totalRecords"
     [loading]="loading"
-    (loadItems)="load($event)"
+    (loadData)="load($event)"
+    (deleteRow)="deleteItem($event)"
+    [rowDeleting]="itemDeleting"
   ></app-table>
   <p-footer>
     <app-link [label]="createNewItemLabel" [route]="itemRoute"></app-link>

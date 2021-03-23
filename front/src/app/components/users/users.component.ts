@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ListComponent} from '../list/list.component';
 import {RestClientService} from '../../services/rest-client-service';
-import {createColumn, createDateColumn} from '../../models/column';
 
 @Component({
   selector: 'app-users',
@@ -14,11 +13,10 @@ export class UsersComponent extends ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.columns = [
-      createColumn('login', 'Login'),
-      createColumn('name', 'Name'),
-      createDateColumn('creationMoment', 'Moment of creation')
-    ];
+    this.createColumn('login', 'Login');
+    this.createColumn('name', 'Name');
+    this.createDateColumn('creationMoment', 'Moment of creation');
+    this.createDeleteAndEditColumn();
   }
 
 }
