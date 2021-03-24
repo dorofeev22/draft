@@ -44,14 +44,14 @@ public abstract class EntityBaseService<E extends BaseEntity, I, O> {
     // <Key (entity filed name), Value (function for transformation parameter value into the object fore searching)>
     protected Map<String, Function<String[], List<Object>>> searchParameterFunctionMap = new HashMap<>();
     
+    @Autowired
+    protected ModelMapper modelMapper;
+    
     @PostConstruct
     public void init() {
         searchParameterFunctionMap.put("id", this::createListIds);
     }
     
-    @Autowired
-    protected ModelMapper modelMapper;
-
     protected abstract BaseRepository<E> getRepository();
     protected abstract Class<E> getEntityClass();
     protected abstract Class<O> getOutcomeModelClass();
@@ -64,23 +64,39 @@ public abstract class EntityBaseService<E extends BaseEntity, I, O> {
         return modelMapper.map(entity, getOutcomeModelClass());
     }
     
+    protected E toEntity(@NotNull final I incomeModel) {
+        return modelMapper.map(incomeModel, getEntityClass());
+    }
+    
+    protected void mapEntity(@NotNull final I incomeModel, @NotNull final E entity) {
+        modelMapper.map(incomeModel, entity);
+    }
+    
     protected E getOrThrow(@NotNull final UUID id) {
         return getRepository().findById(id).orElseThrow(() -> createNotFountError(getEntityClass(), id));
     }
     
-    public E create(I incomeModel) {
+    public E create(@NotNull final I incomeModel) {
         beforeCreation(incomeModel);
-        return getRepository().save(modelMapper.map(incomeModel, getEntityClass()));
+        return getRepository().save(toEntity(incomeModel));
     }
 
     public O createAndGetOutcome(@NotNull final I creationModel) {
         return toOutcome(create(creationModel));
     }
-
-    public PageModel<O> find(Pageable pageable) {
-        return createPageModel(getRepository().findAll(pageable), this::toOutcome);
+    
+    @Transactional
+    public E update(@NotNull final UUID id, @NotNull final I incomeModel) {
+        final E entity = getOrThrow(id);
+        mapEntity(incomeModel, entity);
+        return entity;
     }
     
+    @Transactional
+    public O updateAnfGetOutcome(@NotNull final UUID id, @NotNull final I incomeModel) {
+        return toOutcome(update(id, incomeModel));
+    }
+
     public O getOutcomeModel(@NotNull final UUID id) {
         return toOutcome(getOrThrow(id));
     }

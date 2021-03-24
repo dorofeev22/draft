@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class UserResponse extends UserCreationModel {
+public class UserResponse extends UserRequest {
 
     private UUID id;
     private LocalDateTime creationMoment;

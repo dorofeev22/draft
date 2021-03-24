@@ -11,7 +11,7 @@ import {RestClientService} from '../../services/rest-client-service';
 import {BaseComponent} from '../base-component';
 import {Page} from '../../models/page';
 import {LazyLoadEvent} from 'primeng/api';
-import {Item} from '../../models/Item';
+import {Item} from '../../models/item';
 
 @Injectable()
 export abstract class ListComponent extends BaseComponent {

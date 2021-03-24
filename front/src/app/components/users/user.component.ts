@@ -3,7 +3,7 @@ import {ItemComponent} from '../item/item.component';
 import {RestClientService} from '../../services/rest-client-service';
 import {FormBuilder} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {createInput} from '../../models/field';
+import {FieldEdit} from '../../models/field';
 
 @Component({
   selector: 'app-user',
@@ -16,11 +16,9 @@ export class UserComponent extends ItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fields = [
-      createInput('name', 'User name'),
-      createInput('login', 'Login', true),
-      createInput('password', 'Password', true)
-    ];
+    this.createInput('name', 'User name');
+    this.createInput('login', 'Login', new FieldEdit(true, false), true);
+    this.createInput('password', 'Password', new FieldEdit(false), true);
     this.createForm();
   }
 

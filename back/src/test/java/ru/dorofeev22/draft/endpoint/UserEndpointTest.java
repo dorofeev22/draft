@@ -10,7 +10,7 @@ import ru.dorofeev22.draft.core.constant.UrlConstants;
 import ru.dorofeev22.draft.core.endpoint.PageModel;
 import ru.dorofeev22.draft.core.error.service.ErrorModel;
 import ru.dorofeev22.draft.domain.User;
-import ru.dorofeev22.draft.service.model.UserCreationModel;
+import ru.dorofeev22.draft.service.model.UserRequest;
 import ru.dorofeev22.draft.service.model.UserResponse;
 
 import java.util.UUID;
@@ -24,7 +24,7 @@ import static ru.dorofeev22.draft.endpoint.UserTestHelper.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserEndpointTest extends BaseTestEntityRestService<User, UserCreationModel, UserResponse> {
+public class UserEndpointTest extends BaseTestEntityRestService<User, UserRequest, UserResponse> {
 
     @Override
     protected Class<UserResponse> getResponseClass() {

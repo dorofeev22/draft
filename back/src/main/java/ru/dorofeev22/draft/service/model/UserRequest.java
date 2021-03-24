@@ -4,7 +4,7 @@ import javax.validation.constraints.Size;
 
 import static ru.dorofeev22.draft.core.constant.ModelConstants.DEFAULT_STRING_LENGTH;
 
-public class UserCreationModel {
+public class UserRequest {
 
     @Size(max = DEFAULT_STRING_LENGTH)
     private String name;

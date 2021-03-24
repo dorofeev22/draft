@@ -1,7 +1,7 @@
 package ru.dorofeev22.draft.endpoint;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import ru.dorofeev22.draft.service.model.UserCreationModel;
+import ru.dorofeev22.draft.service.model.UserRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +11,12 @@ import static ru.dorofeev22.draft.core.constant.RequestConstants.OFFSET;
 
 public class UserTestHelper {
 
-    public static UserCreationModel createUserCreationModel(String name, String login) {
-        UserCreationModel userCreationModel = new UserCreationModel();
-        userCreationModel.setName(name);
-        userCreationModel.setLogin(login);
-        userCreationModel.setPassword("1_ghyjk^9");
-        return userCreationModel;
+    public static UserRequest createUserCreationModel(String name, String login) {
+        UserRequest userRequest = new UserRequest();
+        userRequest.setName(name);
+        userRequest.setLogin(login);
+        userRequest.setPassword("1_ghyjk^9");
+        return userRequest;
     }
 
     public static List<ImmutablePair<String, String>> createLikeSearchParameters() {

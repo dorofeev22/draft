@@ -1,5 +1,7 @@
 package ru.dorofeev22.draft.core.endpoint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -10,7 +12,8 @@ import ru.dorofeev22.draft.core.error.service.MessageHelper;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
-
+    
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private final MessageHelper messageHelper;
 
     public RestExceptionHandler(MessageHelper messageHelper) {
@@ -30,7 +33,9 @@ public class RestExceptionHandler {
     }
 
     private ErrorModel createErrorModel(Throwable t) {
-        return new ErrorModel(t.getClass().getSimpleName(), messageHelper.localize(t));
+        final ErrorModel errorModel = new ErrorModel(t.getClass().getSimpleName(), messageHelper.localize(t));
+        log.error("Api calling error: {}", errorModel);
+        return errorModel;
     }
 
 }

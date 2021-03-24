@@ -21,4 +21,9 @@ public class ErrorModel {
     public String getErrorMessage() {
         return errorMessage;
     }
+    
+    @Override
+    public String toString() {
+        return "{ errorCode: " + errorCode + ", errorMessage: " + errorMessage + " }";
+    }
 }

@@ -19,12 +19,13 @@ public class MessageHelper {
     }
 
     public String localize(@NotNull final Throwable t) {
-        return t instanceof BaseError ? localize(t, ((BaseError) t).getArgs()) : localize(t, (String []) null);
+        return t instanceof BaseError ? localize((BaseError) t) : t.getLocalizedMessage();
     }
 
-    private String localize(@NotNull final Throwable t, final String... args) {
-        final Object[] localizedArgs = args != null ? Arrays.stream(args).map(this::localize).toArray(Object[]::new) : null;
-        return messageSource.getMessage(getClassName(t), localizedArgs, locale);
+    private String localize(@NotNull final BaseError e) {
+        final Object[] localizedArgs =
+                e.getArgs() != null ? Arrays.stream(e.getArgs()).map(this::localize).toArray(Object[]::new) : null;
+        return messageSource.getMessage(getClassName(e), localizedArgs, locale);
     }
 
     private String localize(@NotNull final String arg) {

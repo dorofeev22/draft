@@ -22,8 +22,12 @@ export class RestClientService {
     return `/${path}`.concat(isEmpty(itemId) ? '' : `/${itemId}`);
   }
 
-  public get<T>(path: string, params: {} ): Observable<T> {
+  public get<T>(path: string, params: {}): Observable<T> {
     return this.httpClient.get<T>(this.getUrl(path), {params: this.getHttpParams(params)});
+  }
+
+  public getById<T>(path: string, itemId: string): Observable<T> {
+    return this.httpClient.get<T>(this.getUrl(path, itemId));
   }
 
   public save<T>(path: string, itemId: string, body: {}): Observable<T> {
