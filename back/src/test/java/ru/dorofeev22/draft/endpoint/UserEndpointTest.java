@@ -57,12 +57,14 @@ public class UserEndpointTest extends BaseTestEntityRestService<User, UserReques
     
     @Test
     @Sql("/insert-user.sql")
+    @Sql(scripts = {"/delete-all-users.sql"}, executionPhase = AFTER_TEST_METHOD, config = @SqlConfig(transactionMode = ISOLATED))
     public void getUserTest() throws Exception {
         assertNotNull(getItem("087053ae-c31f-4842-baba-9ebafe3ee594"));
     }
 
     @Test
     @Sql("/insert-users.sql")
+    @Sql(scripts = {"/delete-all-users.sql"}, executionPhase = AFTER_TEST_METHOD, config = @SqlConfig(transactionMode = ISOLATED))
     public void getUsersTest() throws Exception {
         PageModel<UserResponse> result  = getItemsPage(createLikeSearchParameters());
         PageModel<UserResponse> results  = getItemsPage(createInSearchParameters());
@@ -72,8 +74,18 @@ public class UserEndpointTest extends BaseTestEntityRestService<User, UserReques
 
     @Test
     public void getUsersParamErrorTest() throws Exception {
-        ErrorModel errorModel = getWithClientError(createPageParameters(5, 11));
+        final ErrorModel errorModel = getWithClientError(createPageParameters(5, 11));
         assertEquals("BadParameterError", errorModel.getErrorCode());
+    }
+    
+    @Test
+    @Sql("/insert-user.sql")
+    @Sql(scripts = {"/delete-all-users.sql"}, executionPhase = AFTER_TEST_METHOD, config = @SqlConfig(transactionMode = ISOLATED))
+    public void updateUserTest() throws Exception {
+        final UserRequest userRequest = new UserRequest();
+        userRequest.setName("Jimmy");
+        UserResponse updatedUser = put("087053ae-c31f-4842-baba-9ebafe3ee594", userRequest);
+        assertEquals(userRequest.getName(), updatedUser.getName());
     }
 
 }

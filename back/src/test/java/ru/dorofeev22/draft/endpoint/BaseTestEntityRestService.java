@@ -1,6 +1,5 @@
 package ru.dorofeev22.draft.endpoint;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.test.web.servlet.MvcResult;
@@ -22,9 +21,12 @@ public abstract class BaseTestEntityRestService<E extends BaseEntity, C, R> exte
         return toPageResponse(get(parameters, OK_STATUS));
     }
 
-
     protected R post(C creationModel) throws Exception {
         return map(post(createRequestBody(creationModel), OK_STATUS));
+    }
+    
+    protected R put(String id, C updateModel) throws Exception {
+        return map(put(id, createRequestBody(updateModel), OK_STATUS));
     }
 
 
