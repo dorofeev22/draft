@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/${spring.application.name}?currentSchema=dr
     username: app_draft
-    password: '0-App#drafT-9'
+    password: psw
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
@@ -15,4 +15,5 @@ spring:
             non_contextual_creation: true
 
 app:
-  payment-secret-key: 8loMCgrU9E8TjNlrNElKwfGWdg6LrMxq
+  payment-secret-key:
+  order-public-key-path:

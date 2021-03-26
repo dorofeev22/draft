@@ -1,6 +1,6 @@
 package ru.dorofeev22.draft.service.model;
 
-import ru.dorofeev22.draft.core.utils.CalculateSignature;
+import ru.dorofeev22.draft.core.crypt.CalculateSignature;
 
 import javax.validation.constraints.NotNull;
 

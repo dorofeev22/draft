@@ -1,5 +1,6 @@
 back/target/
 back/src/main/resources/static
+application-local.yml
 
 ### IntelliJ IDEA ###
 .idea

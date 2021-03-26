@@ -1,4 +1,4 @@
-package ru.dorofeev22.draft.core.utils;
+package ru.dorofeev22.draft.core.crypt;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

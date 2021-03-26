@@ -7,7 +7,7 @@ import org.springframework.core.io.ResourceLoader;
 
 import java.io.IOException;
 
-public class ResUtils {
+public class ResourceUtils {
 
     private static final ResourceLoader RESOURCE_LOADER = new DefaultResourceLoader();
 

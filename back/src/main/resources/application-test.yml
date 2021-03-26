@@ -9,3 +9,5 @@ spring:
       enabled: true
   jpa:
     show-sql: true
+app:
+  payment-secret-key: 8loMCgrU9E8TjNlrNElKwfGWdg6LrMxq
