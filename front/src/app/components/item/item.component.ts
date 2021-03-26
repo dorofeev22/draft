@@ -4,7 +4,7 @@ import {RestClientService} from '../../services/rest-client-service';
 import {createInput, Field, FieldCreationModel, FieldEdit} from '../../models/field';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Item} from '../../models/item';
+import {Item} from '../../models/Item';
 import {isEmpty} from '../../utils/object-utils';
 
 @Injectable()

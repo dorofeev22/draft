@@ -1,17 +1,10 @@
 import {Injectable} from '@angular/core';
-import {
-  Column,
-  createActionColumn,
-  createColumn,
-  createDateColumn,
-  createDeleteAction,
-  createEditAction
-} from '../../models/column';
+import {Column, createActionColumn, createColumn, createDateColumn, createDeleteAction, createEditAction} from '../../models/column';
 import {RestClientService} from '../../services/rest-client-service';
 import {BaseComponent} from '../base-component';
 import {Page} from '../../models/page';
 import {LazyLoadEvent} from 'primeng/api';
-import {Item} from '../../models/item';
+import {Item} from '../../models/Item';
 
 @Injectable()
 export abstract class ListComponent extends BaseComponent {
