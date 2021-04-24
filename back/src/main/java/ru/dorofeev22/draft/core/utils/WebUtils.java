@@ -19,11 +19,15 @@ public class WebUtils {
     private static final String X_FORWARDED_FOR_HEADER_NAME = "X-Forwarded-For";
     private static final String X_REAL_IP_HEADER_NAME = "X-Real-IP";
     
-    public static String createPathParameters(List<ImmutablePair<String, String>> parameters) {
+    public static String createPathParameters(@NotNull final List<ImmutablePair<String, UrlParam>> parameters) {
         return QUESTION.concat(
                 parameters.stream()
-                        .map(p -> p.left.concat(EQUAL).concat(p.right))
+                        .map(p -> p.left.concat(EQUAL).concat(p.right.getValue()))
                         .collect(Collectors.joining(AMPERSAND)));
+    }
+
+    public static String createUrl(@NotNull final String url, final List<ImmutablePair<String, UrlParam>> parameters) {
+        return url.concat(parameters != null && !parameters.isEmpty() ? createPathParameters(parameters) : "");
     }
     
     

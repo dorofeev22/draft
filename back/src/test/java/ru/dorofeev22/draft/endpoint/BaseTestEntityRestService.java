@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.dorofeev22.draft.core.BaseEntity;
 import ru.dorofeev22.draft.core.endpoint.PageModel;
+import ru.dorofeev22.draft.core.utils.UrlParam;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -17,7 +18,7 @@ public abstract class BaseTestEntityRestService<E extends BaseEntity, C, R> exte
         return map(getById(id, OK_STATUS));
     }
 
-    protected PageModel<R> getItemsPage(List<ImmutablePair<String, String>> parameters) throws Exception {
+    protected PageModel<R> getItemsPage(List<ImmutablePair<String, UrlParam>> parameters) throws Exception {
         return toPageResponse(get(parameters, OK_STATUS));
     }
 

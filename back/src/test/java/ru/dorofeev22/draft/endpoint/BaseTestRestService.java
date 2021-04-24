@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.dorofeev22.draft.core.error.service.ErrorModel;
+import ru.dorofeev22.draft.core.utils.UrlParam;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -46,7 +47,7 @@ public abstract class BaseTestRestService {
         return get(getUrl(id), resultMatcher);
     }
     
-    protected MvcResult get(List<ImmutablePair<String, String>> parameters, ResultMatcher resultMatcher) throws Exception {
+    protected MvcResult get(List<ImmutablePair<String, UrlParam>> parameters, ResultMatcher resultMatcher) throws Exception {
         return get(getPath().concat(createPathParameters(parameters)), resultMatcher);
     }
     
@@ -54,7 +55,7 @@ public abstract class BaseTestRestService {
         return toErrorResponse(getById(id, ERROR_4XX_STATUS));
     }
     
-    protected ErrorModel getWithClientError(List<ImmutablePair<String, String>> parameters) throws Exception {
+    protected ErrorModel getWithClientError(List<ImmutablePair<String, UrlParam>> parameters) throws Exception {
         return toErrorResponse(get(parameters, ERROR_4XX_STATUS));
     }
 
